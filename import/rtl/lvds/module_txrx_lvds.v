@@ -69,13 +69,13 @@
 `timescale 1ps/1ps
 
 module moudle_txrx_lvds #(
-   parameter SIM_DEVICE = "ULTRASCALE"  // Set for the family <ULTRASCALE | ULTRASCALE_PLUS>
+   parameter SIM_DEVICE = "ULTRASCALE",  // Set for the family <ULTRASCALE | ULTRASCALE_PLUS>
    parameter TX_DATA_WIDTH = 5,
    parameter RX_DATA_WIDTH = 5,
    parameter NUM_CHANNELS = 2,
    parameter NUM_CLOCKS  = 2,
-   parameter CLK_PATTERN = 7'b1100011),
-)(
+   parameter CLK_PATTERN = 7'b1100011)
+(
    input        refclk_p,  refclk_n,     // lvds reference clock
    input        tx_reset,                // reset (active high)
    input        rx_reset,                // reset (active high)
@@ -100,13 +100,12 @@ module moudle_txrx_lvds #(
    output         rx1_px_ready,
    output         rx2_px_clk,
    output [34:0]  rx2_px_data,
-   output         rx2_px_ready,
+   output         rx2_px_ready//,
 
    // Status
-   output reg   rx1_match, rx1_match_lt,
-   output reg   rx2_match, rx2_match_lt
+   //output reg   rx1_match, rx1_match_lt,
+   //output reg   rx2_match, rx2_match_lt
 ) ;  
-localparam   SIM_DEVICE   = "ULTRASCALE" ; // Set for the family <ULTRASCALE | 
 
 // Wires
 
@@ -114,7 +113,7 @@ wire            refclk_i;
 wire            clk300_g;   
 wire            clk150_g;   
 
-wire            tx_px_clk;
+//wire            tx_px_clk;
 wire            tx_clkdiv2;
 wire            tx_clkdiv4;
 wire            tx_locked;
@@ -129,18 +128,18 @@ wire            rx_idelay_rdy;
 wire            rx_reset_int;
 
 wire            rx1_cmt_locked;
-wire            rx1_px_clk;
-wire            rx1_px_ready;
-reg      [7:0]  rx1_px_count;
-wire    [34:0]  rx1_px_data;            
-reg     [34:0]  rx1_px_last;            
+//wire            rx1_px_clk;
+//wire            rx1_px_ready;
+//reg      [7:0]  rx1_px_count;
+//wire    [34:0]  rx1_px_data;            
+//reg     [34:0]  rx1_px_last;            
 
 wire            rx2_cmt_locked;
-wire            rx2_px_clk;
-wire            rx2_px_ready;
-reg      [7:0]  rx2_px_count;
-wire    [34:0]  rx2_px_data;            
-reg     [34:0]  rx2_px_last;            
+//wire            rx2_px_clk;
+//wire            rx2_px_ready;
+//reg      [7:0]  rx2_px_count;
+//wire    [34:0]  rx2_px_data;            
+//reg     [34:0]  rx2_px_last;            
 
 //-------------------------------------------------------------------------------
 //

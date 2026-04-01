@@ -1,0 +1,105 @@
+#*!*******************************************************************
+# * Copyright (C) NSN 2015
+# * 
+# * Project     : FISU PCS Agent 
+# * File        : Makefile_example_env<br>
+# * Description : Makefile for Mentor Questa. Make is modular and agent is compiled through separate Makefile
+# * 
+# * 
+# * $Revision: 516 $
+# * $LastChangedDate:  $
+# * $LastChangedBy:  $
+# * 
+# * $HeadURL: 120$
+# * 
+# *******************************************************************/
+
+
+################################################################################
+
+#INCL      = +incdir+../env/+../sequences/+../analysis+../tests/
+INCL      = +incdir+./tb/
+
+################################################################################
+
+#VLG_FILES = \
+./tx_clkgen_7to1.v  \
+./tx_piso_7to1.v  \
+./tx_channel_7to1.v  \
+./rx_clkgen_1to7.v  \
+./rx_sipo_1to7.v  \
+./rx_channel_1to7.v  \
+./module_txrx_lvds.v 
+
+
+
+SV_FILES = \
+./tx_clkgen_7to1.v  \
+./tx_piso_7to1.v  \
+./tx_channel_7to1.v  \
+./rx_clkgen_1to7.v  \
+./rx_sipo_1to7.v  \
+./rx_channel_1to7.v  \
+./module_txrx_lvds.v \
+./tb/test_txrx_lvds.sv \
+./tb/tb_txrx_lvds.v 
+
+SV_FILES1 = /tools/Xilinx/Vivado/2020.2/data/verilog/src/glbl.v
+
+LIBRARY_PATH = \
+-L unisims_ver \
+-L secureip \
+-L unisim
+
+NUM=10
+
+################################################################################
+#D:/Xilinx/Vivado/2018.3/data/verilog/src/glbl.v
+#vlog  -nologo -source -sv -sv12compat -timescale 1ps/1ps -work work +incdir+$SRC -l select_io.log   select_io.v  ./tb/tb_selectIO.v
+
+VLOG_CMD = vlog -nologo -source  -sv -sv12compat -timescale 1ps/1ps -work work 
+ifeq ($(DEBUG),1)
+	VLOG_CMD += +define+DEBUG
+endif
+
+#vsim tb_dual_ram -gui -l ./tb_dual_ram.log  +UVM_VERBOSITY=$VERBOSITY -sv_seed $SEED +UVM_TESTNAME=$UVM_TEST -do "run -all"
+#vsim -novopt tb_selectio -gui -L unisims_ver -L secureip -L unisim -l ./tb_selectio.log   -do "run -all"
+#log -r /*
+#run 200us
+#ELAB_OPTS = -licqueue -lca -nc -notice -full64 +memcbk -override_timescale=1fs/1fs +vcs+vcdpluson \
+-ntb_opts nde_virtf -ntb_opts uvm -l vcs_elab.log
+RUN_OPTS  = -64 -c -voptargs=+acc 
+RUN_OPTS += +NUM=$(NUM)
+#RUN_OPTS  = -64 -c 
+#RUN_OPTS = -64  -gui -voptargs=+acc 
+#RUN_OPTS += -wlf 
+  
+
+# Default seed set to 1 use SEED = random for arbitrary seed
+SEED      = 1 
+VERBOSITY = UVM_MEDIUM
+MODE      = NORMAL # Default configuration record-replay mode set to NORMAL
+UVM_TEST  = pcs_base_test
+TESTCASE = tb_txrx_lvds
+
+
+all default: clean comp run
+
+comp: 
+	cp  /home/lucji/work/vivado/compile_simlib/questa/modelsim.ini  ./modelsim.ini
+	vlib work
+#	$(MAKE) -f Makefile analysis "VLOG_CMD=$(VLOG_CMD)" 
+	$(VLOG_CMD) $(SV_FILES1)
+#	$(VLOG_CMD) $(VLG_FILES)
+	$(VLOG_CMD) $(INCL) -work work -l select_io.log $(SV_FILES) 
+
+run: 
+	vsim $(TESTCASE) $(RUN_OPTS) $(LIBRARY_PATH) -l ./$(TESTCASE).log -do "log -r /*;run -all;quit -f"
+#	log -r /*
+#	run 200us
+#	vsim top $(RUN_OPTS) +UVM_VERBOSITY=$(VERBOSITY) \
+        -sv_seed $(SEED) +UVM_TESTNAME=$(UVM_TEST) -do "run -all"
+
+clean:
+	rm -rf work *.ucdb transcript vsim.wlf modelsim.ini
+	rm -rf *.tag

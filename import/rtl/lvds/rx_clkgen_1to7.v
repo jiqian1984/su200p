@@ -169,7 +169,7 @@ reg  [6:0] px_data;
 reg  [2:0] px_state;
 reg  [2:0] px_correct;
 reg        px_rd_enable;
-wire [3:0] px_rd_addr_int;
+//wire [3:0] px_rd_addr_int;
 reg        px_ready_int;
 
 //
@@ -767,7 +767,7 @@ end
 //
 genvar i;
 generate
-for (i = 0 ; i < 8 ; i = i+1) begin : bit
+for (i = 0 ; i < 8 ; i = i+1) begin : bit_mem
   RAM32X1D fifo (
      .D     (rx_wr_data[i]),
      .WCLK  (rx_clkdiv8),

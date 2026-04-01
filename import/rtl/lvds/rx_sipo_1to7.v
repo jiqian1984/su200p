@@ -182,7 +182,7 @@ end
 //
 genvar i;
 generate
-for (i = 0 ; i < 8 ; i = i+1) begin : bit
+for (i = 0 ; i < 8 ; i = i+1) begin : bit_mem
   RAM32X1D mem (
      .D     (rx_wr_data[i]),
      .WCLK  (rx_clkdiv8),
